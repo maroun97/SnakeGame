@@ -1,0 +1,89 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>Snake Game</title>
+</head>
+<body>
+
+  <div id="game">
+    <canvas id="canvas"></canvas>
+  </div>
+  <style>
+  #game {
+  width: 700px;
+  margin: 0 auto;
+}
+
+canvas {
+  border: 2px solid #000;
+}
+</style>
+
+  <script>
+  // game.js
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let snake = [{ x: 100, y: 100 }, { x: 140, y: 150 }, { x: 130, y: 150 }, { x: 120, y: 150 }, { x: 110, y: 150 }];
+let dx = 10;
+let dy = 0;
+let food = { x: 0, y: 20 };
+
+document.addEventListener('keydown', keydownHandler);
+
+function keydownHandler(event) {
+  if (event.key === 'ArrowLeft') {
+    dx = -10;
+    dy = 0;
+  } else if (event.key === 'ArrowRight') {
+    dx = 10;
+    dy = 0;
+  } else if (event.key === 'ArrowUp') {
+    dx = 0;
+    dy = -10;
+  } else if (event.key === 'ArrowDown') {
+    dx = 0;
+    dy = 10;
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < snake.length; i++) {
+    ctx.fillStyle = (i === 0) ? 'green' : 'white';
+    ctx.fillRect(snake[i].x, snake[i].y, 10, 10);
+
+    ctx.strokeStyle = 'red';
+    ctx.strokeRect(snake[i].x, snake[i].y, 10, 10);
+  }
+
+  ctx.fillStyle = 'Orange';
+  ctx.fillRect(food.x, food.y, 10, 10);
+
+  if (snake[0].x === food.x && snake[0].y === food.y) {
+    food = {
+      x: Math.floor(Math.random() * canvas.width / 10) * 10,
+      y: Math.floor(Math.random() * canvas.height / 10) * 10
+    };
+  } else {
+    snake.pop();
+  }
+
+  let newHead = { x: snake[0].x + dx, y: snake[0].y + dy };
+  snake.unshift(newHead);
+}
+
+function main() {
+  setInterval(draw, 70);
+  setInterval(addFood, 5000);  // Add food every 5 seconds
+}
+
+main();
+
+  </script>
+</body>
+</html>
+
